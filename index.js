@@ -1,6 +1,7 @@
-const io = require('socket.io')('3002', {
+require('dotenv').config()
+const io = require('socket.io')(process.env.PORT, {
    cors: {
-      origin: 'http://localhost:3000',
+      origin: process.env.CLIENT,
    },
 })
 
@@ -54,9 +55,7 @@ io.on('connection', socket => {
       })
 
       activeUsers = activeUsers.map(user =>
-         user.userId === userJoinId
-            ? { ...user, rooms: (user.rooms = [...user.rooms, roomId]) }
-            : user
+         user.userId === userJoinId ? { ...user, rooms: (user.rooms = [...user.rooms, roomId]) } : user
       )
       console.log('users will take joining: ', users)
       if (users.length) {
@@ -75,9 +74,7 @@ io.on('connection', socket => {
       })
 
       activeUsers = activeUsers.map(user =>
-         user.userId === userLeaveId
-            ? { ...user, rooms: user.rooms.filter(id => id !== roomId) }
-            : user
+         user.userId === userLeaveId ? { ...user, rooms: user.rooms.filter(id => id !== roomId) } : user
       )
 
       console.log('users will take leaving: ', users)
